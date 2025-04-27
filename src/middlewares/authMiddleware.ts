@@ -5,11 +5,16 @@ interface JwtPayload {
   userId: string;
 }
 
-export const protect = (req: Request, res: Response, next: NextFunction) => {
+export const protect = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
 
   if (!token) {
-    return res.status(401).json({ message: "No token, authorization denied" });
+    res.status(401).json({ message: "No token, authorization denied" });
+    return;
   }
 
   try {
@@ -20,6 +25,7 @@ export const protect = (req: Request, res: Response, next: NextFunction) => {
     req.user = decoded.userId;
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Token is not valid" });
+    res.status(401).json({ message: "Token is not valid" });
+    return;
   }
 };

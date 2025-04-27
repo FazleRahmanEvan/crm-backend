@@ -2,29 +2,35 @@ import { Request, Response } from "express";
 import User from "../models/User";
 import Project from "../models/Project";
 
-export const getDashboardData = async (req: Request, res: Response) => {
+export const getDashboardData = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    // Get the user data using userId (from JWT token)
-    const user = await User.findById(req.user);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const userId = req.user;
+    if (!userId) {
+      res.status(400).json({ message: "User ID not found in the request" });
+      return;
     }
 
-    // Fetch total clients
-    const totalClients = await User.countDocuments({ userId: req.user });
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
 
-    // Fetch total projects
-    const totalProjects = await Project.countDocuments({ userId: req.user });
+    const totalClients = await User.countDocuments({ userId: userId });
 
-    // Fetch reminders (optional)
-    const remindersDue = 5; // Just an example, you can fetch from a reminders model
+    const totalProjects = await Project.countDocuments({ userId: userId });
 
-    // Projects by status (example)
+    const remindersDue = 5;
+
     const projectsByStatus = {
-      active: 10, // Replace with actual data
+      active: 10,
       completed: 5,
     };
 
+    // Send the response
     res.json({
       totalClients,
       totalProjects,
@@ -32,6 +38,7 @@ export const getDashboardData = async (req: Request, res: Response) => {
       projectsByStatus,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
