@@ -1,14 +1,22 @@
-// backend/src/app.ts
-
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
+import { connectDB } from "./config/db";
+import authRoutes from "./routes/authRoutes";
+
+dotenv.config();
+
+connectDB();
 
 export const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// Example route
+// Auth routes
+app.use("/api/auth", authRoutes);
+
+// Example route (you can remove this later)
 app.get("/", (_req, res) => {
   res.send("Mini-CRM Backend Running 🚀");
 });
