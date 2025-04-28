@@ -4,6 +4,7 @@ export interface IReminder extends Document {
   user: mongoose.Schema.Types.ObjectId;
   client: mongoose.Schema.Types.ObjectId;
   project: mongoose.Schema.Types.ObjectId;
+  title: string;
   dueDate: Date;
   interactionType: string;
   notes: string;
@@ -23,6 +24,10 @@ const reminderSchema = new Schema<IReminder>({
   project: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Project",
+    required: true,
+  },
+  title: {
+    type: String,
     required: true,
   },
   dueDate: {
