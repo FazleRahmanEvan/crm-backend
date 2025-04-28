@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db";
 import authRoutes from "./routes/authRoutes";
+import clientRoutes from "./routes/clientRoutes";
 import dashboardRoutes from "./routes/dashboardRoutes";
 
 dotenv.config();
@@ -17,6 +18,7 @@ app.use(express.json());
 // Auth routes
 app.use("/api/auth", authRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/clients", clientRoutes);
 
 // Example route (you can remove this later)
 app.get("/", (_req, res) => {
