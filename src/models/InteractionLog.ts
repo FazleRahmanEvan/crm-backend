@@ -1,26 +1,33 @@
-import mongoose from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
-const InteractionLogSchema = new mongoose.Schema(
+export interface IInteractionLog extends Document {
+  user: mongoose.Types.ObjectId;
+  date: Date;
+  interactionType: "call" | "meeting" | "email";
+  notes?: string;
+}
+
+const interactionLogSchema = new Schema<IInteractionLog>(
   {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    clientId: { type: mongoose.Schema.Types.ObjectId, ref: "Client" },
-    projectId: { type: mongoose.Schema.Types.ObjectId, ref: "Project" },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     date: { type: Date, required: true },
     interactionType: {
       type: String,
-      enum: ["call", "meeting", "email"],
       required: true,
+      enum: ["call", "meeting", "email"],
     },
-    notes: { type: String },
+    notes: { type: String, required: false },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
-export const InteractionLog = mongoose.model(
+const InteractionLog = mongoose.model<IInteractionLog>(
   "InteractionLog",
-  InteractionLogSchema
+  interactionLogSchema
 );
+
+export { InteractionLog };
+
+//
