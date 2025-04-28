@@ -41,7 +41,8 @@ export const updateClient = async (req: Request, res: Response) => {
       { new: true }
     );
     if (!updatedClient) {
-      return res.status(404).json({ message: "Client not found" });
+      res.status(404).json({ message: "Client not found" });
+      return;
     }
     res.status(200).json(updatedClient);
   } catch (error) {
@@ -58,7 +59,8 @@ export const deleteClient = async (req: Request, res: Response) => {
       userId: req.user,
     });
     if (!deletedClient) {
-      return res.status(404).json({ message: "Client not found" });
+      res.status(404).json({ message: "Client not found" });
+      return;
     }
     res.status(200).json({ message: "Client deleted successfully" });
   } catch (error) {
