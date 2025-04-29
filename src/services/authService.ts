@@ -22,7 +22,7 @@ export const registerUser = async (
   const user = new User({
     name,
     email,
-    password: hashedPassword,
+    passwordHash: hashedPassword,
   });
 
   await user.save();
@@ -31,14 +31,14 @@ export const registerUser = async (
 
 export const loginUser = async (email: string, password: string) => {
   const user = (await User.findOne({ email }).select(
-    "+password"
-  )) as IUserWithPassword | null;
+    "+passwordHash"
+  )) as IUserWithPassword;
 
   if (!user || !user.password) {
     throw new Error("Invalid credentials");
   }
+  const isMatch = await bcrypt.compare(password, user.passwordHash);
 
-  const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
     throw new Error("Invalid credentials");
   }

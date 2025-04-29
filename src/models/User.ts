@@ -13,7 +13,7 @@ const UserSchema: Schema = new Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    passwordHash: { type: String, required: true },
+    passwordHash: { type: String, required: true, select: false },
     themePreference: { type: String, default: "light" },
   },
   { timestamps: true }
